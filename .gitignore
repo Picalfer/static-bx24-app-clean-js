@@ -1,1 +1,17 @@
-.idea
+# Node.js
+node_modules/
+npm-debug.log
+package-lock.json
+
+# Логи
+*.log
+
+# Операционные системы
+.DS_Store
+Thumbs.db
+
+# IDE и редакторы
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
