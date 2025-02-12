@@ -8,20 +8,48 @@ document.addEventListener("DOMContentLoaded", function () {
         console.log("Данные авторизации:", authData);
 
         // Обработчик кнопки "Получить задачи"
-        document.getElementById("makeTask").addEventListener("click", function () {
-            makeTask();
+        document.getElementById("actionButton").addEventListener("click", function () {
+            doAction();
         });
     });
 });
 
 // Функция для получения списка задач
-function makeTask() {
-    BX24.callMethod("tasks.task.add", {
+function doAction() {
+    makeTask();
+}
+
+async function makeTask() {
+    try {
+        let id = await getUserId(); // Ждем получения ID
+        console.log(id); // Теперь id будет правильным
+        BX24.callMethod("tasks.task.add", {
             fields: {
                 TITLE: "test",
                 DESCRIPTION: "test description",
-                RESPONSIBLE_ID: 1
+                RESPONSIBLE_ID: id // Используем полученный ID
             }
-        }
-    );
+        });
+    } catch (error) {
+        console.error("Ошибка при получении ID:", error);
+    }
+}
+
+async function getUserId() {
+    return new Promise((resolve, reject) => {
+        BX24.callMethod(
+            "user.current",
+            {},
+            function(result) {
+                if (result.error()) {
+                    console.error(result.error());
+                    reject(result.error()); // Отклоняем промис в случае ошибки
+                } else {
+                    const id = result.data().ID; // Получаем ID
+                    console.log(id);
+                    resolve(id); // Разрешаем промис с ID
+                }
+            }
+        );
+    });
 }
