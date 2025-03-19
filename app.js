@@ -26,7 +26,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 // Функция для получения списка задач
 function getLastName() {
-    BX24.callMethod("user.current", {}, function(result) {
+    BX24.callMethod("user.current", {}, function (result) {
         if (result.error()) {
             console.error(result.error());
         } else {
@@ -37,20 +37,22 @@ function getLastName() {
 
 // Функция для изменения фамилии на "новая фамилия"
 function setLastName() {
-    BX24.callMethod("user.current", {}, function(result) {
+    BX24.callMethod("user.current", {}, function (result) {
         if (result.error()) {
             console.error(result.error());
         } else {
             console.log(result.data().LAST_NAME);
+            // используем метод user.update,не user.userfield.update
             BX24.callMethod("user.update", {
-                ID: result.data().ID,
-                LAST_NAME: "новая фамилия"
-            }, function(result) {
+                // важно написать именно ID, не id
+                ID: result.data().ID, // тут можно хардкодом написать id, например 1 (без ковычек)
+                // тут пишем сразу поле, не fields {LAST_NAME: "новая фамилия"}
+                LAST_NAME: "новейшая фамилия"
+            }, function (result) {
                 console.log(result);
             });
         }
     });
-
 }
 
 async function makeTask() {
@@ -73,7 +75,7 @@ async function getUserId() {
         BX24.callMethod(
             "user.current",
             {},
-            function(result) {
+            function (result) {
                 if (result.error()) {
                     console.error(result.error());
                     reject(result.error()); // Отклоняем промис в случае ошибки
